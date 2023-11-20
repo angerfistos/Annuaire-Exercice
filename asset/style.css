@@ -1,0 +1,15 @@
+*
+{
+    background: #D6D6D6;
+}
+
+.container {
+    width: 100%;
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+  
+  .small-container {
+    max-width: 600px;
+  }
