@@ -1,6 +1,6 @@
-<script src="https://cdn.tailwindcss.com"></script>
-<footer class="mt-8">
-    <div class="w-full border-t border-b border-black p-4">
+</body>
+<footer class="relative mx-auto bottom-0">
+    <div class="w-full border-t border-b border-black p-4 mt-8">
         <ul class="flex flex-wrap justify-between items-center text-sm font-medium text-gray-500">
             <li>
                 <a href="https://github.com/angerfistos/annuaire.git">GitHub</a>
@@ -15,3 +15,4 @@
     </div>
     <p class="text-center text-gray-500 mt-4">Réalisé par Jérémie Seynhaeve</p>
 </footer>
+</html>
