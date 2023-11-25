@@ -18,24 +18,45 @@ $title = "Page d'Accueil - PhoneBook";
         <table class="table-auto w-full">
             <thead>
                 <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-                    <th class="py-3 px-6 text-left">Nom</th>
-                    <th class="py-3 px-6 text-left">Prénom</th>
+                    <th class="py-3 px-6 text-xl text-left">Nom</th>
+                    <th class="py-3 px-6 text-xl text-left">Prénom</th>
                 </tr>
             </thead>
             <tbody class="text-gray-600 text-sm font-light">
                 <!-- Premier contact -->
-                <tr class="border-b border-gray-200 hover:bg-gray-100 cursor-pointer">
-                    <td class="py-3 px-6 text-left">Doe</td>
-                    <td class="py-3 px-6 text-left">John</td>
+                <tr class="border-2 border-black">
+                    <td class="py-3 px-6 text-xl text-left text-[#3B5998] font-bold">Doe</td>
+                    <td class="py-3 px-6 text-xl text-left text-[#3B5998] font-bold">John</td>
                 </tr>
-                <tr class="hidden">
+                <tr class="hidden border-2 border-black">
                     <td colspan="2">
-                        <div class="p-4">
-                            Email: john.doe@example.com<br>
-                            Téléphone: 123-456-7890<br>
-                            Adresse: 123 Main St, City, Country<br>
-                            Entreprise: Example Inc<br>
-                            Note: A friendly contact<br>
+                        <div class="p-4 mb-2 text-[#647AA9] text-xl">
+                            <span class="font-bold">Email:</span> john.doe@example.com<br>
+                            <span class="font-bold">Téléphone:</span><br>
+                            <span class="font-bold">Adresse:</span> 123 Main St, City, Country<br>
+                            <span class="font-bold">Entreprise:</span>Example Inc<br>
+                            <span class="font-bold">Note:</span> A friendly contact<br>
+                            <div class="flex justify-end mt-2">
+                                <a href="pedit.php" class="text-blue-500 mr-2">Modifier</a>
+                                <button class="text-red-500">Supprimer</button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- Deuxième contact -->
+                <tr class="border-2 border-black">
+                    <td class="py-3 px-6 text-xl text-left text-[#3B5998] font-bold">Doe</td>
+                    <td class="py-3 px-6 text-xl text-left text-[#3B5998] font-bold">John</td>
+                </tr>
+                <tr class="hidden border-2 border-black">
+                    <td colspan="2">
+                        <div class="p-4 mb-2 text-[#647AA9] text-xl">
+                            <span class="font-bold">Email:</span> john.doe@example.com<br>
+                            <span class="font-bold">Téléphone:</span><br>
+                            <span class="font-bold">Adresse:</span> 123 Main St, City, Country<br>
+                            <span class="font-bold">Entreprise:</span>Example Inc<br>
+                            <span class="font-bold">Note:</span> A friendly contact<br>
                             <div class="flex justify-end mt-2">
                                 <a href="pedit.php" class="text-blue-500 mr-2">Modifier</a>
                                 <button class="text-red-500">Supprimer</button>
