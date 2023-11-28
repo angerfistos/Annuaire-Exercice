@@ -10,7 +10,6 @@ $dsn = "mysql:host=" . $host . ";dbname=" . $dbname;
 try {
     $bdd = new PDO($dsn, $username, $passwordbdd);
     $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    echo "Connexion réussie";
 } catch (PDOException $e) {
     echo "Erreur de connexion : " . $e->getMessage();
 }
