@@ -1,0 +1,28 @@
+structure: 
+
+admin 
+- admin-login.php
+- admin-requestSQL.php
+- admin-pmdp.php (gestion du mot de passe oublié)
+- admin-inscription.php
+- admin-importContact.php
+- admin-editContact.php
+- admin-deleteContact.php
+- admin-connectdb.php
+- admin-addcontact.php
+
+asset
+- style.css
+
+partials
+- header.php
+- footer.php
+
+à la racine 
+- index.php
+- paccueil.php
+- pconnexion.php
+- peditContact.php
+- pincscritpion.php
+- pmdp.php (mot de passe oublié)
+

@@ -3,16 +3,18 @@ include('./partials/header.php');
 $title = "Inscription - PhoneBook";
 session_start();
 
+
 // Affichage des erreurs
-if (isset($_SESSION['errors'])) {
-    echo $_SESSION['errors'];
-    unset($_SESSION['errors']);
+if (isset($_SESSION['message'])) {
+    echo $_SESSION['message'];
+    unset($_SESSION['message']);
     echo "<script>
         setTimeout(function() {
             document.querySelector('.alert').style.display = 'none';
         }, 5000);
     </script>";
 }
+
 ?>
 
 <div class="mx-auto md:w-max w-full h-full mt-8">

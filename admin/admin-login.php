@@ -1,38 +1,26 @@
 <?php
-require("admin-requestSQL.php");
-$title = "Admin-login - PhoneBook";
+include ("admin-requestSQL.php");
 session_start();
-
 
 if (isset($_POST['bConfirm'])) {
     $username = htmlspecialchars(strtolower(trim($_POST['username'])));
     $password = md5(trim($_POST['password']));  // Utilisation de md5 pour le mot de passe
 
-    // Vérifier si l'utilisateur existe dans la base de données
+    // Vérifier si les champs username et password sont remplis
+    if (empty($username) || empty($password)) {
+        $_SESSION['message'] = "Le nom d'utilisateur et le mot de passe sont obligatoires.";
+        header("Location: ../pconnexion.php");
+        exit;
+    }
+
     $userExists = checkUser($username, $password);
 
     if ($userExists) {
-        // Si l'utilisateur existe et le mot de passe est correct
-        echo '<div class="alert success" role="alert">
-                <div class="mt-4 mx-8 bg-green-500 text-white font-bold rounded-t px-4 py-2">
-                    Succès:
-                </div>
-                <div class="mx-8 border border-t-0 border-green-400 rounded-b bg-green-100 px-4 py-3 text-green-700">
-                    Connexion réussie. Redirection en cours...
-                </div>
-              </div>';
-              header("Location: ../paccueil.php");
-              exit;
+        // Redirection immédiate vers la page d'accueil après la connexion réussie
+        header("Location: ../paccueil.php");
+        exit;
     } else {
-        // Si les informations de connexion ne sont pas correctes
-        $_SESSION['message'] = '<div class="mt-4 alert error" role="alert">
-            <div class="mx-8 bg-red-500 text-white font-bold rounded-t px-4 py-2">
-                Erreur:
-            </div>
-            <div class="mx-8 border border-t-0 border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-700">
-                Nom d\'utilisateur ou mot de passe incorrect.
-            </div>
-        </div>';
+        $_SESSION['message'] = "Nom d'utilisateur ou mot de passe incorrect.";
         header("Location: ../pconnexion.php");
         exit;
     }
