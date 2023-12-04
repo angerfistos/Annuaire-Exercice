@@ -6,8 +6,15 @@ require('admin/admin-requestSQL.php');
 $title = "Page d'Accueil - PhoneBook";
 
 if (isset($_SESSION['message'])) {
-    echo '<div class="alert">' . $_SESSION['message'] . '</div>';
+    echo $_SESSION['message'];
     unset($_SESSION['message']);
+
+    // Script pour masquer automatiquement l'alerte après 5 secondes
+    echo "<script>
+        setTimeout(function() {
+            document.querySelector('.alert').style.display = 'none';
+        }, 5000);
+    </script>";
 }
 
 // Redirection si l'utilisateur n'est pas connecté
@@ -61,7 +68,7 @@ if (!isset($_SESSION['utilisateurID'])) {
                 echo "</div>";
                 echo "<div class='flex space-x-4 mt-4'>";
                 echo "<a href='peditcontact.php?contactId={$contact['contactId']}' class='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full'>Modifier</a>";
-                echo "<a href='admin/admin-deleteContact.php?contactID={$contact['contactId']}' class='bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full'>Supprimer</a>";
+                echo "<a href='admin/admin-deleteContact.php?contactId={$contact['contactId']}' onclick='return confirm(\"Êtes-vous sûr de vouloir supprimer ce contact ?\");' class='bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full'>Supprimer</a>";
                 echo "</div>";
                 echo "</div>";
             }

@@ -14,31 +14,31 @@ $title = "Réinitialisation du mot de passe - PhoneBook";
         <form class="rounded pb-8" action="admin/admin-pmdp.php" method="post">
             <!-- Champ Nom d'utilisateur -->
             <div class="mb-4">
-                <label class="block text-[#3B5998] text-sm mb-2" for="username">Nom d'utilisateur</label>
+                <label class="block text-[#3B5998] text-sm mb-2" for="username">Nom d'utilisateur<span class="text-red-500">*</span></label>
                 <input name="username" class="bg-white shadow appearance-none border border-black rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline rounded-full" id="username" type="text" placeholder="Nom d'utilisateur">
             </div>
 
             <!-- Champ Question secrète -->
             <div class="mb-4">
-                <label class="block text-[#3B5998] text-sm mb-2" for="secret-question">Question secrète</label>
+                <label class="block text-[#3B5998] text-sm mb-2" for="secret-question">Question secrète<span class="text-red-500">*</span></label>
                 <input name="secret-question" class="bg-white shadow appearance-none border border-black rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline rounded-full" id="secret-question" type="text" placeholder="Question secrète">
             </div>
 
             <!-- Champ Réponse -->
             <div class="mb-4">
-                <label class="block text-[#3B5998] text-sm mb-2" for="secret-answer">Réponse</label>
+                <label class="block text-[#3B5998] text-sm mb-2" for="secret-answer">Réponse<span class="text-red-500">*</span></label>
                 <input name="secret-answer" class="bg-white shadow appearance-none border border-black rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline rounded-full" id="secret-answer" type="text" placeholder="Réponse">
             </div>
 
             <!-- Champ Nouveau mot de passe -->
             <div class="mb-4">
-                <label class="block text-[#3B5998] text-sm mb-2" for="new-password">Nouveau mot de passe</label>
+                <label class="block text-[#3B5998] text-sm mb-2" for="new-password">Nouveau mot de passe<span class="text-red-500">*</span></label>
                 <input name="new-password" class="bg-white shadow appearance-none border border-black rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline rounded-full" id="new-password" type="password" placeholder="Nouveau mot de passe">
             </div>
 
             <!-- Champ Confirmez votre mot de passe -->
             <div class="mb-6">
-                <label class="block text-[#3B5998] text-sm mb-2" for="confirm-password">Confirmez votre mot de passe</label>
+                <label class="block text-[#3B5998] text-sm mb-2" for="confirm-password">Confirmez votre mot de passe<span class="text-red-500">*</span></label>
                 <input name="confirm-password" class="bg-white shadow appearance-none border border-black rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline rounded-full" id="confirm-password" type="password" placeholder="Confirmez votre mot de passe">
             </div>
 

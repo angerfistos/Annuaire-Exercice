@@ -1,23 +1,23 @@
 <?php
-include('admin-requestSQL.php'); 
+session_start();
+require('admin-requestSQL.php');
 
-if (isset($_GET['contactID'])) {
-    $contactId = $_GET['contactID'];
-    $contact = getContactById($contactId);
-    
-    if ($contact) {
-        $result = deleteContactById($contactId);
-        if ($result) {
-            header('Location: ../paccueil.php?status=success&message=Contact+Deleted');
-            exit;
-        } else {
-            header('Location: ../paccueil.php?status=error&message=Unable+to+Delete+Contact');
-            exit;
-        }
+if (isset($_GET['contactId'])) {
+    $contactId = $_GET['contactId'];
+
+    // Suppression du contact
+    $result = deleteContactById($contactId);
+
+    // Gestion des messages
+    if ($result) {
+        setMessage('success', "Contact supprimé avec succès.");
     } else {
-        echo "Aucun contact sélectionné pour la suppression.";
+        setMessage('error', "Erreur lors de la suppression du contact.");
     }
 } else {
-    echo "Aucun contact sélectionné pour la suppression.";
+    setMessage('error', "Aucun identifiant de contact spécifié.");
 }
+
+header("Location: ../paccueil.php");
+exit;
 ?>

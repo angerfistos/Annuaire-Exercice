@@ -2,14 +2,23 @@
 session_start();
 include('./partials/header.php'); 
 $title = "Ajouter un Contact - PhoneBook";
-require('admin/admin-requestSQL.php');  // Assurez-vous que ce chemin est correct
+require('admin/admin-requestSQL.php');  
 
-// Affichage des messages d'erreur ou de succès
 if (!empty($_SESSION['message'])) {
-    echo $_SESSION['message'];
+    echo '<div class="alert">' . $_SESSION['message'] . '</div>';
     unset($_SESSION['message']); // Effacer le message après affichage
 }
 ?>
+
+<script>
+    setTimeout(function() {
+        var alertElement = document.querySelector('.alert');
+        if (alertElement) {
+            alertElement.style.display = 'none';
+        }
+    }, 5000);
+</script>
+
 
 <div class="mx-auto md:w-max w-full h-full mt-8">
     <div class="w-full mt-8">
@@ -17,14 +26,14 @@ if (!empty($_SESSION['message'])) {
         <form class="rounded pb-8" action="admin/admin-addcontact.php" method="post">
             <!-- Nom -->
             <div class="mb-4">
-                <label class="block text-[#3B5998] text-sm mb-2" for="nom">Nom</label>
-                <input class="bg-white shadow appearance-none border border-black rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline rounded-full" name="nom" type="text" placeholder="Nom" required>
+                <label class="block text-[#3B5998] text-sm mb-2" for="nom">Nom<span class="text-red-500">*</span></label>
+                <input class="bg-white shadow appearance-none border border-black rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline rounded-full" name="nom" type="text" placeholder="Nom">
             </div>
 
             <!-- Prénom -->
             <div class="mb-4">
-                <label class="block text-[#3B5998] text-sm mb-2" for="prenom">Prénom</label>
-                <input class="bg-white shadow appearance-none border border-black rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline rounded-full" name="prenom" type="text" placeholder="Prénom" required>
+                <label class="block text-[#3B5998] text-sm mb-2" for="prenom">Prénom<span class="text-red-500">*</span></label>
+                <input class="bg-white shadow appearance-none border border-black rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline rounded-full" name="prenom" type="text" placeholder="Prénom">
             </div>
 
             <!-- E-mail -->
@@ -53,8 +62,8 @@ if (!empty($_SESSION['message'])) {
 
             <!-- Téléphone -->
             <div class="mb-4">
-                <label class="block text-[#3B5998] text-sm mb-2" for="telephone">Téléphone</label>
-                <input class="bg-white shadow appearance-none border border-black rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline rounded-full" name="telephone" type="tel" placeholder="Téléphone" required>
+                <label class="block text-[#3B5998] text-sm mb-2" for="telephone">Téléphone<span class="text-red-500">*</span></label>
+                <input class="bg-white shadow appearance-none border border-black rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline rounded-full" name="telephone" type="tel" placeholder="Téléphone">
             </div>
 
             <!-- Note -->

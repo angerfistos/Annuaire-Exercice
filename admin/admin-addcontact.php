@@ -6,10 +6,8 @@ include('../partials/header.php');
 session_start();
 
 if(isset($_POST["btnAjouterContact"])){ 
-    // Récupération de l'ID de l'utilisateur connecté
+    // Récupération de l'ID de l'utilisateur connecté et des données du formulaire
     $utilisateurID = $_SESSION['utilisateurID'];
-
-    // Récupération des données du formulaire
     $nom = htmlspecialchars(trim($_POST['nom']));
     $prenom = htmlspecialchars(trim($_POST['prenom']));
     $telephone = htmlspecialchars(trim($_POST['telephone']));
@@ -19,26 +17,21 @@ if(isset($_POST["btnAjouterContact"])){
     $dateDeNaissance = htmlspecialchars(trim($_POST['dateDeNaissance']));
     $note = htmlspecialchars(trim($_POST['note'])); 
 
-    $errors = [];
-
-    // Validation des champs obligatoires
+    // Validation des champs obligatoires marqués d'un astérisque
     if (empty($nom) || empty($prenom) || empty($telephone)) {
-        $errors[] = 'Les champs nom, prénom et téléphone sont obligatoires.';
-    }
-
-    // Gestion des erreurs
-    if (!empty($errors)) {
-        $_SESSION['message'] = implode('<br>', $errors);
+        setMessage('error', 'Tous les champs marqués d\'un * sont obligatoires.');
         header('Location: ../paddcontact.php');
         exit;
     }
 
     // Appel de la fonction pour insérer les données
-    $msg = insertContact($utilisateurID, $nom, $prenom, $telephone, $email, $adresse, $entreprise, $dateDeNaissance, $note); 
-    $_SESSION['message'] = $msg;
-
-    // Redirection après l'ajout du contact
-    header('Location: ../paccueil.php');
+    if (insertContact($utilisateurID, $nom, $prenom, $telephone, $email, $adresse, $entreprise, $dateDeNaissance, $note)) {
+        setMessage('success', 'Contact ajouté avec succès.');
+        header('Location: ../paccueil.php');
+    } else {
+        setMessage('error', 'Erreur lors de l\'ajout du contact.');
+        header('Location: ../paddcontact.php');
+    }
     exit;
 }
 ?>

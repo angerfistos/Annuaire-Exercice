@@ -1,6 +1,14 @@
 <?php 
 session_start();
-include('admin/admin-requestSQL.php'); // Assurez-vous que le chemin est correct
+include('./partials/header.php'); 
+$title = "Édition de Contact - PhoneBook";
+require('admin/admin-requestSQL.php');  
+
+
+if (!empty($_SESSION['message'])) {
+    echo $_SESSION['message'];
+    unset($_SESSION['message']);
+}
 
 // Vérifier si l'ID du contact est passé dans l'URL
 if (isset($_GET['contactId'])) {
@@ -11,9 +19,6 @@ if (isset($_GET['contactId'])) {
     header("Location: paccueil.php");
     exit;
 }
-
-$title = "Édition de Contact - PhoneBook";
-include('./partials/header.php'); 
 ?>
 
 <div class="mx-auto md:w-max w-full h-full mt-8">
@@ -24,13 +29,13 @@ include('./partials/header.php');
 
             <!-- Nom -->
             <div class="mb-4">
-                <label class="block text-[#3B5998] text-sm mb-2" for="nom">Nom</label>
+                <label class="block text-[#3B5998] text-sm mb-2" for="nom">Nom<span class="text-red-500">*</span></label>
                 <input class="bg-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="nom" name="nom" type="text" placeholder="Nom" value="<?php echo $contact['nom']; ?>">
             </div>
 
             <!-- Prénom -->
             <div class="mb-4">
-                <label class="block text-[#3B5998] text-sm mb-2" for="prenom">Prénom</label>
+                <label class="block text-[#3B5998] text-sm mb-2" for="prenom">Prénom<span class="text-red-500">*</span></label>
                 <input class="bg-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="prenom" name="prenom" type="text" placeholder="Prénom" value="<?php echo $contact['prenom']; ?>">
             </div>
 
@@ -61,7 +66,7 @@ include('./partials/header.php');
             <!-- Téléphone -->
 
             <div class="mb-4">
-                <label class="block text-[#3B5998] text-sm mb-2" for="telephone">Téléphone</label>
+                <label class="block text-[#3B5998] text-sm mb-2" for="telephone">Téléphone<span class="text-red-500">*</span></label>
                 <input class="bg-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="telephone" name="telephone" type="tel" placeholder="Téléphone" value="<?php echo $contact['telephone']; ?>">
             </div>
 

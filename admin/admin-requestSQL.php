@@ -1,13 +1,40 @@
 <?php 
 include('admin-connectdb.php');
 
-// fonction pour l'insertion des utilisateurs dans la base de données (inscription)
+// Fonction les messages d'erreur ou de succès
+function setMessage($type, $message) {
+    $typeLabel = $type == 'error' ? 'Erreur' : 'Succès';
+    $_SESSION['message'] = '<div class="alert ' . $type . ' mt-4 mx-8 font-bold px-4 py-2 rounded-t">
+                                <div class="rounded mx-8 border border-t-0 rounded-b px-4 py-3 text-white" 
+                                     style="background-color: ' . ($type == 'error' ? '#f56565' : '#48bb78') . ';">'
+                                . $typeLabel . ': ' . $message . 
+                                '</div>
+                            </div>';
+}
+
+// insertion des données utilisateur dans la base de données
 function insertdata($nom, $prenom, $username, $password, $email, $questionSecrete, $reponseSecrete) {
     global $bdd;
     $hashedPassword = md5($password);
 
-    $sqlUser = "INSERT INTO User (nom, prenom, username, password, email, questionSecrete, reponseSecrete) 
-                VALUES (:nom, :prenom, :username, :password, :email, :questionSecrete, :reponseSecrete)";
+    // Vérifier si le nom d'utilisateur ou l'email existe déjà
+    $sqlCheck = "SELECT username, email FROM User WHERE username = :username OR email = :email";
+    $stmtCheck = $bdd->prepare($sqlCheck);
+    $stmtCheck->bindParam(':username', $username);
+    $stmtCheck->bindParam(':email', $email);
+    $stmtCheck->execute();
+    $existingUser = $stmtCheck->fetch(PDO::FETCH_ASSOC);
+
+    if ($existingUser) {
+        if ($existingUser['username'] === $username) {
+            return 'username_exists';
+        }
+        if ($existingUser['email'] === $email) {
+            return 'email_exists';
+        }
+    }
+    // si l'utilisateur et l'email sont valident, insertiondes données
+    $sqlUser = "INSERT INTO User (nom, prenom, username, password, email, questionSecrete, reponseSecrete) VALUES (:nom, :prenom, :username, :password, :email, :questionSecrete, :reponseSecrete)";
     $stmUser = $bdd->prepare($sqlUser);
 
     $stmUser->bindParam(':nom', $nom, PDO::PARAM_STR);
@@ -20,25 +47,13 @@ function insertdata($nom, $prenom, $username, $password, $email, $questionSecret
 
     try {
         $stmUser->execute();
-        return ['status' => 'success', 'message' => 'Utilisateur enregistré avec succès.'];
+        return true;
     } catch (PDOException $e) {
-        if ($e->getCode() == 23000) {
-            return '<div class="alert error mt-4 mx-8 bg-red-500 text-white font-bold rounded-t px-4 py-2">
-                        Erreur:
-                        <div class="mx-8 border border-t-0 border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-700">
-                        Ce nom d\'utilisateur est déjà utilisé.</div>
-                    </div>';
-        } else {
-            return '<div class="alert error mt-4 mx-8 bg-red-500 text-white font-bold rounded-t px-4 py-2">
-                        Erreur:
-                        <div class="mx-8 border border-t-0 border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-700">' . 
-                        htmlspecialchars($e->getMessage()) . '</div>
-                    </div>';
-        }
+        return 'db_error';
     }
 }
 
-// Vérifie si l'utilisateur existe et si le mot de passe est correct
+// si utilisateur existe et si le mot de passe est correct
 function checkUser($username, $password) {
     global $bdd;
 
@@ -145,11 +160,23 @@ function deleteContactById($contactId) {
 function editContact($contactId, $nom, $prenom, $email, $telephone, $adresse, $entreprise, $dateDeNaissance, $note) {
     global $bdd;
 
-    $sql = "UPDATE Contact SET nom = :nom, prenom = :prenom, email = :email, telephone = :telephone, adresse = :adresse, entreprise = :entreprise, dateDeNaissance = :dateDeNaissance, note = :note WHERE contactId = :contactId";
+    // Préparation de la requête SQL pour mettre à jour le contact
+    $sql = "UPDATE Contact SET 
+                nom = :nom, 
+                prenom = :prenom, 
+                email = :email, 
+                telephone = :telephone, 
+                adresse = :adresse, 
+                entreprise = :entreprise, 
+                dateDeNaissance = :dateDeNaissance, 
+                note = :note 
+            WHERE contactId = :contactId";
 
     try {
+        // Préparation de la requête
         $stmt = $bdd->prepare($sql);
 
+        // Liaison des paramètres
         $stmt->bindParam(':nom', $nom, PDO::PARAM_STR);
         $stmt->bindParam(':prenom', $prenom, PDO::PARAM_STR);
         $stmt->bindParam(':email', $email, PDO::PARAM_STR);
@@ -167,11 +194,14 @@ function editContact($contactId, $nom, $prenom, $email, $telephone, $adresse, $e
         $stmt->bindParam(':note', $note, PDO::PARAM_STR);
         $stmt->bindParam(':contactId', $contactId, PDO::PARAM_INT);
 
+        // Exécution de la requête
         $stmt->execute();
 
+        // Si la requête s'exécute sans erreur, renvoyer vrai
         return true;
     } catch (PDOException $e) {
-        return "Erreur lors de la mise à jour du contact. Veuillez réessayer.";
+        // En cas d'erreur, renvoyer le message d'erreur
+        return "Erreur lors de la mise à jour du contact: " . $e->getMessage();
     }
 }
 
@@ -180,29 +210,38 @@ function resetPassword($username, $secretQuestion, $secretAnswer, $newPassword) 
     global $bdd;
 
     try {
-        // Vérifier d'abord la question secrète et la réponse
-        $sql = "SELECT * FROM User WHERE username = :username AND questionSecrete = :questionSecrete AND reponseSecrete = :reponseSecrete";
+        // Récupérer la question secrète pour l'utilisateur
+        $sqlGetSecretQuestion = "SELECT questionSecrete FROM User WHERE username = :username";
+        $stmtGetSecretQuestion = $bdd->prepare($sqlGetSecretQuestion);
+        $stmtGetSecretQuestion->bindParam(':username', $username, PDO::PARAM_STR);
+        $stmtGetSecretQuestion->execute();
+        $userQuestion = $stmtGetSecretQuestion->fetch(PDO::FETCH_ASSOC);
+
+        if (!$userQuestion || $secretQuestion !== $userQuestion['questionSecrete']) {
+            return 'question_mismatch';
+        }
+
+        // Vérifier la réponse secrète
+        $sql = "SELECT * FROM User WHERE username = :username AND reponseSecrete = :reponseSecrete";
         $stmt = $bdd->prepare($sql);
         $stmt->bindParam(':username', $username, PDO::PARAM_STR);
-        $stmt->bindParam(':questionSecrete', $secretQuestion, PDO::PARAM_STR);
         $stmt->bindParam(':reponseSecrete', $secretAnswer, PDO::PARAM_STR);
         $stmt->execute();
 
         if ($stmt->rowCount() == 1) {
-            // Mise à jour du mot de passe
-            $hashedPassword = md5($newPassword);
+            $hashedPassword = md5($newPassword); // Remarque: md5 n'est pas recommandé pour le hachage des mots de passe
             $updateSql = "UPDATE User SET password = :password WHERE username = :username";
             $updateStmt = $bdd->prepare($updateSql);
             $updateStmt->bindParam(':password', $hashedPassword, PDO::PARAM_STR);
             $updateStmt->bindParam(':username', $username, PDO::PARAM_STR);
             $updateStmt->execute();
 
-            return true;
+            return 'success';
         } else {
-            return false; 
+            return 'answer_mismatch';
         }
     } catch (PDOException $e) {
-        return false;
+        return 'error';
     }
 }
 
@@ -230,41 +269,38 @@ function isValidDate($date, $format = 'Y-m-d') {
 function importCSVToDatabase($filePath, $utilisateurID) {
     global $bdd;
 
-    // Vérification de l'existence et de la lisibilité du fichier
+    // Vérifie si le fichier existe et est lisible
     if (!file_exists($filePath) || !is_readable($filePath)) {
-        error_log("Le fichier CSV spécifié est introuvable ou illisible.");
+        setMessage('error', "Le fichier CSV spécifié est introuvable ou illisible.");
         return false;
     }
 
     $importSuccess = true;
-
-    // Début de la transaction
     $bdd->beginTransaction();
 
     if (($handle = fopen($filePath, "r")) !== FALSE) {
-        // Lire la première ligne pour ignorer les en-têtes
-        fgetcsv($handle, 1000, ";");
+        fgetcsv($handle, 1000, ";"); // Ignorer les en-têtes
 
         while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
             // Nettoyage et assignation des données
-            $nom = cleanData($data[2]);
-            $prenom = cleanData($data[3]);
-            $telephone = cleanData($data[4]);
-            $email = cleanData($data[5]);
-            $adresse = cleanData($data[6]);
-            $entreprise = cleanData($data[7]);
-            $dateDeNaissance = cleanData($data[8]);
-            $note = isset($data[7]) ? cleanData($data[9]) : null;
+            $nom = cleanData($data[0]);
+            $prenom = cleanData($data[1]);
+            $telephone = cleanData($data[2]);
+            $email = cleanData($data[3]);
+            $adresse = cleanData($data[4]);
+            $entreprise = cleanData($data[5]);
+            $dateDeNaissance = cleanData($data[6]);
+            $note = isset($data[7]) ? cleanData($data[7]) : '';
 
             // Traitement des valeurs 'NULL'
             $entreprise = ($entreprise === '' || strtolower($entreprise) === 'null') ? null : $entreprise;
             $dateDeNaissance = ($dateDeNaissance === '' || strtolower($dateDeNaissance) === 'null' || !isValidDate($dateDeNaissance)) ? null : $dateDeNaissance;
-            $note = ($note === '' || strtolower($note) === 'null') ? null : $note;
 
             // Préparation de la requête SQL
             $sql = "INSERT INTO Contact (utilisateurID, nom, prenom, telephone, email, adresse, entreprise, dateDeNaissance, note) VALUES (:utilisateurID, :nom, :prenom, :telephone, :email, :adresse, :entreprise, :dateDeNaissance, :note)";
             $stmt = $bdd->prepare($sql);
 
+            // Bind des paramètres
             $stmt->bindParam(':utilisateurID', $utilisateurID, PDO::PARAM_INT);
             $stmt->bindParam(':nom', $nom, PDO::PARAM_STR);
             $stmt->bindParam(':prenom', $prenom, PDO::PARAM_STR);
@@ -278,7 +314,7 @@ function importCSVToDatabase($filePath, $utilisateurID) {
             try {
                 $stmt->execute();
             } catch (PDOException $e) {
-                error_log("Erreur d'import CSV: " . $e->getMessage());
+                setMessage('error', "Erreur lors de l'importation du CSV : " . $e->getMessage());
                 $importSuccess = false;
                 $bdd->rollback();
                 break;
@@ -287,10 +323,12 @@ function importCSVToDatabase($filePath, $utilisateurID) {
         fclose($handle);
     } else {
         $importSuccess = false;
+        setMessage('error', "Erreur lors de l'ouverture du fichier CSV.");
     }
 
     if ($importSuccess) {
         $bdd->commit();
+        setMessage('success', "Importation CSV réussie.");
     }
 
     return $importSuccess;

@@ -1,7 +1,21 @@
 <?php 
+session_start();
+include ('./admin/admin-requestSQL.php');
 include('./partials/header.php'); 
 $title = "PhoneBook";
+
+if (isset($_SESSION['message'])) {
+    echo $_SESSION['message'];
+    unset($_SESSION['message']);
+
+    echo "<script>
+            setTimeout(function() {
+                document.querySelector('.alert').style.display = 'none';
+            }, 5000);
+        </script>";
+}
 ?>
+
  
 <div class="mx-auto md:w-max w-full h-full mt-8"> 
     <div>
