@@ -282,15 +282,14 @@ function importCSVToDatabase($filePath, $utilisateurID) {
         fgetcsv($handle, 1000, ";"); // Ignorer les en-têtes
 
         while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
-            // Nettoyage et assignation des données
-            $nom = cleanData($data[0]);
-            $prenom = cleanData($data[1]);
-            $telephone = cleanData($data[2]);
-            $email = cleanData($data[3]);
-            $adresse = cleanData($data[4]);
-            $entreprise = cleanData($data[5]);
-            $dateDeNaissance = cleanData($data[6]);
-            $note = isset($data[7]) ? cleanData($data[7]) : '';
+            $nom = cleanData($data[2]);
+            $prenom = cleanData($data[3]);
+            $telephone = cleanData($data[4]);
+            $email = cleanData($data[5]);
+            $adresse = cleanData($data[6]);
+            $entreprise = cleanData($data[7]);
+            $dateDeNaissance = cleanData($data[8]);
+            $note = isset($data[7]) ? cleanData($data[9]) : null;
 
             // Traitement des valeurs 'NULL'
             $entreprise = ($entreprise === '' || strtolower($entreprise) === 'null') ? null : $entreprise;
