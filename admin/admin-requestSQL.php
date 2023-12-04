@@ -229,7 +229,7 @@ function resetPassword($username, $secretQuestion, $secretAnswer, $newPassword) 
         $stmt->execute();
 
         if ($stmt->rowCount() == 1) {
-            $hashedPassword = md5($newPassword); // Remarque: md5 n'est pas recommandé pour le hachage des mots de passe
+            $hashedPassword = md5($newPassword); // Utilisation de MD5 pour le hachage du mot de passe
             $updateSql = "UPDATE User SET password = :password WHERE username = :username";
             $updateStmt = $bdd->prepare($updateSql);
             $updateStmt->bindParam(':password', $hashedPassword, PDO::PARAM_STR);
@@ -241,6 +241,8 @@ function resetPassword($username, $secretQuestion, $secretAnswer, $newPassword) 
             return 'answer_mismatch';
         }
     } catch (PDOException $e) {
+        // En cas d'erreur lors de l'exécution de la requête SQL
+        error_log("Erreur lors de la réinitialisation du mot de passe : " . $e->getMessage());
         return 'error';
     }
 }
@@ -333,6 +335,3 @@ function importCSVToDatabase($filePath, $utilisateurID) {
     return $importSuccess;
 }
 ?>
-
-
-

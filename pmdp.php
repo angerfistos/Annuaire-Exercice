@@ -1,8 +1,14 @@
 <?php 
+session_start();
 include('./partials/header.php'); 
 $title = "Réinitialisation du mot de passe - PhoneBook";
-?>
 
+// Affichage du message (si défini) et suppression après affichage
+if (isset($_SESSION['message'])) {
+    echo $_SESSION['message'];
+    unset($_SESSION['message']); // Efface le message après l'avoir affiché
+}
+?>
 <div class="mx-auto md:w-max w-full h-full mt-8">
     <div>
         <a href="index.php">
@@ -52,3 +58,11 @@ $title = "Réinitialisation du mot de passe - PhoneBook";
 </div>
 
 <?php include('./partials/footer.php');?>
+<script>
+        setTimeout(function() {
+            var alertDiv = document.querySelector('.alert');
+            if (alertDiv) {
+                alertDiv.style.display = 'none';
+            }
+        }, 5000); // 5000 millisecondes = 5 secondes
+</script>
