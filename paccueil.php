@@ -8,8 +8,6 @@ $title = "Page d'Accueil - PhoneBook";
 if (isset($_SESSION['message'])) {
     echo $_SESSION['message'];
     unset($_SESSION['message']);
-
-    // Script pour masquer automatiquement l'alerte après 5 secondes
     echo "<script>
         setTimeout(function() {
             document.querySelector('.alert').style.display = 'none';
@@ -17,7 +15,6 @@ if (isset($_SESSION['message'])) {
     </script>";
 }
 
-// Redirection si l'utilisateur n'est pas connecté
 if (!isset($_SESSION['utilisateurID'])) {
     header('Location: pconnexion.php');
     exit();
@@ -50,42 +47,57 @@ if (!isset($_SESSION['utilisateurID'])) {
     </div>
 </div>
 
-<div class="grid grid-cols-1 gap-4">
-    <?php
-    if (isset($_SESSION['utilisateurID'])) {
-        $contacts = getContacts($_SESSION['utilisateurID']);
-        if (!empty($contacts)) {
-            foreach ($contacts as $contact) {
-                echo "<div class='clic bg-[#D6D6D6] p-4 rounded-lg shadow'>";
-                echo "<h3 class='text-xl text-gray-800 font-bold mb-3'>{$contact['nom']}, {$contact['prenom']}</h3>";
-                echo "<div class='space-y-1 hidden'>";
-                echo "<p><span class='font-semibold'>Email:</span> {$contact['email']}</p>";
-                echo "<p><span class='font-semibold'>Téléphone:</span> {$contact['telephone']}</p>";
-                echo "<p><span class='font-semibold'>Adresse:</span> {$contact['adresse']}</p>";
-                echo "<p><span class='font-semibold'>Entreprise:</span> {$contact['entreprise']}</p>";
-                echo "<p><span class='font-semibold'>Date de naissance:</span> {$contact['dateDeNaissance']}</p>";
-                echo "<p><span class='font-semibold'>Note:</span> {$contact['note']}</p>";
-                echo "</div>";
-                echo "<div class='flex space-x-4 mt-4'>";
-                echo "<a href='peditcontact.php?contactId={$contact['contactId']}' class='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full'>Modifier</a>";
-                echo "<a href='admin/admin-deleteContact.php?contactId={$contact['contactId']}' onclick='return confirm(\"Êtes-vous sûr de vouloir supprimer ce contact ?\");' class='bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full'>Supprimer</a>";
-                echo "</div>";
-                echo "</div>";
-            }
-        } else {
-            echo "<p>Vous n'avez aucun contact enregistré.</p>";
+<div>
+    <div class="grid grid-cols-1 gap-4">
+        <?php
+ if (isset($_SESSION['utilisateurID'])) {
+    $contacts = getContacts($_SESSION['utilisateurID']);
+    if (!empty($contacts)) {
+        foreach ($contacts as $contact) {
+            echo "<div class='clic bg-[#D6D6D6] p-4 rounded-lg shadow'>";
+            echo "<div class='flex justify-between items-center'>";
+            echo "<div class='flex items-center'>";
+            echo "<h3 class='text-xl text-gray-800 font-bold'>{$contact['nom']}, {$contact['prenom']}</h3>";
+            echo "<button><img src='./img/eye.png' class='inline-block eye-icon closed ml-2 w-5 h-5' alt='voir'></button>";
+            echo "<button><img src='./img/eye-ferme.svg'class='inline-block eye-icon open ml-2 w-5 h-5 hidden' alt='masqué'></button>";
+            echo "</div>";
+            echo "</div>";
+            echo "<div class='contact-details space-y-1 hidden mt-3'>";
+            echo "<p><span class='font-semibold'>Email:</span> {$contact['email']}</p>";
+            echo "<p><span class='font-semibold'>Téléphone:</span> {$contact['telephone']}</p>";
+            echo "<p><span class='font-semibold'>Adresse:</span> {$contact['adresse']}</p>";
+            echo "<p><span class='font-semibold'>Entreprise:</span> {$contact['entreprise']}</p>";
+            echo "<p><span class='font-semibold'>Date de naissance:</span> {$contact['dateDeNaissance']}</p>";
+            echo "<p><span class='font-semibold'>Note:</span> {$contact['note']}</p>";
+
+            echo "<div class='flex space-x-4'>";
+            echo "<a href='peditcontact.php?contactId={$contact['contactId']}' class='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full'>Modifier</a>";
+            echo "<a href='admin/admin-deleteContact.php?contactId={$contact['contactId']}' onclick='return confirm(\"Êtes-vous sûr de vouloir supprimer ce contact ?\");' class='bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full'>Supprimer</a>";
+            echo "</div>"; 
+            echo "</div>";
+
+            echo "</div>"; 
         }
     } else {
-        echo "<p>Veuillez vous connecter sur <a href='pconnexion.php'>www.PhoneBook.com</a> pour voir vos contacts.</p>";
+        echo "<p>Vous n'avez aucun contact enregistré.</p>";
     }
-    ?>
+} else {
+    echo "<p>Veuillez vous connecter pour voir vos contacts.</p>";
+}
+        ?>
+    </div>
 </div>
 
 <script>
 document.querySelectorAll('.clic').forEach(card => {
     card.addEventListener('click', () => {
-        let info = card.querySelector('div');
-        info.classList.toggle('hidden');
+        let details = card.querySelector('.contact-details');
+        let eyeOpenIcon = card.querySelector('.eye-icon.open');
+        let eyeClosedIcon = card.querySelector('.eye-icon.closed');
+
+        details.classList.toggle('hidden');
+        eyeOpenIcon.classList.toggle('hidden');
+        eyeClosedIcon.classList.toggle('hidden');
     });
 });
 </script>

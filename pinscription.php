@@ -23,7 +23,7 @@ if (isset($_SESSION['message'])) {
             <!-- Nom -->
             <div class="mb-4">
                 <label class="block text-[#3B5998] text-sm mb-2" for="nom">Nom</label>
-                <input class="bg-white shadow appearance-none border border-black rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline rounded-full" name="nom" id="nom" type="text" placeholder="Nom" value="<?php echo isset($_SESSION['formData']['nom']) ? htmlspecialchars($_SESSION['formData']['nom']) : ''; ?>">
+                <input autofocus class="bg-white shadow appearance-none border border-black rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline rounded-full" name="nom" id="nom" type="text" placeholder="Nom" value="<?php echo isset($_SESSION['formData']['nom']) ? htmlspecialchars($_SESSION['formData']['nom']) : ''; ?>">
             </div>
 
             <!-- Prénom -->

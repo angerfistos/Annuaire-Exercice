@@ -21,7 +21,7 @@ if (isset($_SESSION['message'])) {
             <!-- Champ Nom d'utilisateur -->
             <div class="mb-4">
                 <label class="block text-[#3B5998] text-sm mb-2" for="username">Nom d'utilisateur<span class="text-red-500">*</span></label>
-                <input name="username" class="bg-white shadow appearance-none border border-black rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline rounded-full" id="username" type="text" placeholder="Nom d'utilisateur">
+                <input autofocus name="username" class="bg-white shadow appearance-none border border-black rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline rounded-full" id="username" type="text" placeholder="Nom d'utilisateur">
             </div>
 
             <!-- Champ Question secrète -->
